@@ -128,3 +128,18 @@ const FACE_DETECTFACE = '/face/face_detectface?';
 //人脸对比
 const FACE_FACECOMPARE = '/face/face_facecompare?';
 ```
+
+## 交流群
+QQ群：102324323，使用疑问，开发，贡献代码请加群。
+
+## 感谢
+感谢腾讯AI开放平台2017年8月邀请本公司加入测试，感谢腾讯AI加速器的支持。
+
+## 捐赠
+如果觉得此项目对你有帮助，欢迎请作者一杯咖啡
+
+![捐赠wechat](https://gitee.com/uctoo/uctoo/raw/master/Public/images/donate.png)
+
+License
+-------
+MIT 
