@@ -600,7 +600,7 @@ class Ai
 
 
     /**
-     * 文本翻译	对文本进行翻译，支持中文/英语自动识别和翻译
+     * 文本翻译（AI Lab）接口提供自动翻译能力，可以帮您快速完成一段文本的翻译，支持中、英、德、法、日、韩、西、粤语种。
      * @param string $text 待分析文本，统一采用UTF-8编码，非空且长度上限1024字节
      * @param int $type 0自动识别（中英文互转）,1中文翻译成英文,2英文翻译成中文
      * @return boolean|array url 成功则返回分析文本后的结果
@@ -630,6 +630,38 @@ class Ai
         return false;
     }
 
+    /**
+     * 文本翻译（翻译君）接口提供自动翻译能力，可以帮您快速完成一段文本的翻译，支持多种语言之间的互译。
+     * @param string $text 待分析文本，统一采用UTF-8编码，非空且长度上限1024字节
+     * @param string $source 两位小写字母	zh	源语言缩写
+     * @param string $target 两位小写字母	en	目标语言缩写
+     * @return boolean|array url 成功则返回分析文本后的结果   TODO:bug
+     */
+    public function nlp_texttranslate($text, $source = 'zh' ,$target = 'en' ){
+
+        $this->values['text'] = urlencode($text);
+        $this->values['app_id'] = $this->appid;
+        $this->values['time_stamp'] = time();
+        $this->values['nonce_str'] = self::generateNonceStr();
+        $this->values['source'] = $source;
+        $this->values['target'] = $target;
+        $this->setSign();//签名
+
+        $params =  $this->toUrlParams();
+
+        $result = $this->http_get(self::API_URL_PREFIX.self::NLP_TEXTTRANS.$params);
+        if ($result)
+        {
+            $json = json_decode($result,true);
+            if (!$json || !empty($json['ret'])) {
+                $this->ret = $json['ret'];
+                $this->msg = $json['msg'];
+                return $json;
+            }
+            return $json;
+        }
+        return false;
+    }
 
     /**
      * 基础闲聊接口提供基于文本的基础聊天能力，可以让您的应用快速拥有具备上下文语义理解的机器聊天功能。
