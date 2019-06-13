@@ -1,0 +1,30 @@
+{
+    "name" : "uctoo/tencent-ai",
+    "description" : "Tencent AI open platform SDK",
+    "keywords" : ["Tencent AI open platform","Tencent AI","Tencent-AI-sdk"],
+    "homepage" : "https://github.com/uctoo/tencent-ai-php-sdk",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name": "UCT",
+            "email": "contact@uctoo.com",
+            "homepage": "https://www.uctoo.com"
+        }
+    ],
+    "require": {
+        "php":">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uctoo\\TencentAi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uctoo\\Tests\\": "tests/"
+        }
+    }
+}
