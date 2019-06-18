@@ -44,8 +44,14 @@ class Ai
     const NLP_WORDCOM = '/nlp/nlp_wordcom?';
     //情感分析
     const NLP_TEXTPOLAR = '/nlp/nlp_textpolar?';
-    //机器翻译
+    //机器翻译（AI Lab）
     const NLP_TEXTTRANS = '/nlp/nlp_texttrans?';
+    //机器翻译（翻译君）
+    const NLP_TEXTTRANSLATE = '/nlp/nlp_texttranslate?';
+    //图片翻译
+    const NLP_IMAGETRANSLATE = '/nlp/nlp_imagetranslate?';
+    //语音翻译
+    const NLP_SPEECHTRANSLATE = '/nlp/nlp_speechtranslate?';
     //智能闲聊
 	const NLP_TEXTCHAT = '/nlp/nlp_textchat?';
 	//图片识别
@@ -649,7 +655,83 @@ class Ai
 
         $params =  $this->toUrlParams();
 
-        $result = $this->http_get(self::API_URL_PREFIX.self::NLP_TEXTTRANS.$params);
+        $result = $this->http_get(self::API_URL_PREFIX.self::NLP_TEXTTRANSLATE.$params);
+        if ($result)
+        {
+            $json = json_decode($result,true);
+            if (!$json || !empty($json['ret'])) {
+                $this->ret = $json['ret'];
+                $this->msg = $json['msg'];
+                return $json;
+            }
+            return $json;
+        }
+        return false;
+    }
+
+    /**
+     * 识别图片中的文字，并进行翻译。
+     * @param string $image 待识别图片,原始图片的base64编码数据（解码后大小上限1MB）
+     * @param string $session_id 一次请求ID（尽可能唯一，长度上限64字节）
+     * @param string $scene 识别类型（word-单词识别，doc-文档识别）
+     * @param string $source 两位小写字母,源语言缩写
+     * @param string $target 两位小写字母,目标语言缩写
+     * @return boolean|array 成功则返回识别翻译后的结果
+     */
+    public function nlp_imagetranslate($image,$session_id = '1', $scene = 'doc',$source = 'zh', $target = 'en'){
+        $this->values['app_id'] = $this->appid;
+        $this->values['time_stamp'] = time();
+        $this->values['nonce_str'] = self::generateNonceStr();
+        $this->values['image'] = urlencode($image);
+        $this->values['session_id'] = $session_id;
+        $this->values['scene'] = $scene;
+        $this->values['source'] = $source;
+        $this->values['target'] = $target;
+        $this->setSign();//签名
+
+        $data =  $this->toUrlParams();
+
+        $result = $this->http_post(self::API_URL_PREFIX.self::NLP_IMAGETRANSLATE,$data);
+        if ($result)
+        {
+            $json = json_decode($result,true);
+            if (!$json || !empty($json['ret'])) {
+                $this->ret = $json['ret'];
+                $this->msg = $json['msg'];
+                return $json;
+            }
+            return $json;
+        }
+        return false;
+    }
+
+    /**
+     * 识别出音频中的文字，并进行翻译。
+     * @param string $speech 语音分片数据的Base64编码，非空且长度上限8MB
+     * @param int $format  语音压缩格式编码，定义见下文描述
+     * @param int $seq  语音分片所在语音流的偏移量
+     * @param int $end 是否结束分片标识，定义见下文描述
+     * @param string $session_id 非空且长度上限64B
+     * @param string $source 两位小写字母,源语言缩写
+     * @param string $target 两位小写字母,目标语言缩写
+     * @return boolean|array 成功则返回识别翻译后的结果
+     */
+    public function nlp_speechtranslate($speech,$format = 8,$seq = 0, $end = 0, $session_id = '1', $source = 'zh', $target = 'en'){
+        $this->values['app_id'] = $this->appid;
+        $this->values['time_stamp'] = time();
+        $this->values['nonce_str'] = self::generateNonceStr();
+        $this->values['speech_chunk'] = urlencode($speech);
+        $this->values['format'] = $format;
+        $this->values['seq'] = $seq;
+        $this->values['end'] = $end;
+        $this->values['session_id'] = $session_id;
+        $this->values['source'] = $source;
+        $this->values['target'] = $target;
+        $this->setSign();//签名
+
+        $data =  $this->toUrlParams();
+
+        $result = $this->http_post(self::API_URL_PREFIX.self::NLP_SPEECHTRANSLATE,$data);
         if ($result)
         {
             $json = json_decode($result,true);
